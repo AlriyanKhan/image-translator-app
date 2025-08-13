@@ -1,0 +1,18 @@
+# Python / Backend
+backend/.venv/
+backend/.venvv/
+backend/__pycache__/
+*.pyc
+
+# Node / Frontend
+frontend/node_modules/
+frontend/build/
+.pnp.*
+npm-debug.log*
+yarn-error.log*
+
+# macOS
+.DS_Store
+
+# Add this if it's not already there
+backend/google-credentials.json
