@@ -10,14 +10,16 @@ CORS(app)
 # --- Google Vision Credentials (Stays the same) ---
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'google-credentials.json'
 
+
 @app.route('/api/translate', methods=['POST'])
 def translate_endpoint():
     # --- Step 1: Perform OCR (This part is unchanged) ---
     if 'file' not in request.files:
         return jsonify({"error": "No file part in the request"}), 400
-    
+
     file = request.files['file']
     image_content = file.read()
+    target_lang = request.form.get('target_lang', 'de')
 
     client = vision.ImageAnnotatorClient()
     image = vision.Image(content=image_content)
@@ -33,11 +35,11 @@ def translate_endpoint():
     try:
         # This is the public API endpoint for LibreTranslate
         url = "https://translate.fedilab.app/translate"
-        
+
         payload = {
             "q": detected_text,
-            "source": "en",  # Assuming original text is English
-            "target": "de",  # Translating to German
+            "source": "auto",  # Assuming original text is English
+            "target": target_lang,  # Translating to German
             "format": "text"
         }
         headers = {"Content-Type": "application/json"}
@@ -59,6 +61,7 @@ def translate_endpoint():
         "original": detected_text,
         "translation": translated_text
     })
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5001)
